@@ -19,6 +19,11 @@ var values = []
 var valuesDecimal = []
 var testResult
 
+var L
+var Lq
+var W 
+var Wq
+
 
 
 
@@ -51,7 +56,6 @@ const handleAddClick = () => {
 };
 
 const [open, setOpen] = React.useState(false);
-const [open2, setOpen2] = React.useState(false);
 const [selectedValue, setSelectedValue] = React.useState(values[1]);
 
 
@@ -59,28 +63,19 @@ const handleClickOpen = () => {
   setOpen(true);
 };
 
-const handleClickOpen2 = () => {
-  setOpen2(true);
-};
-
 const handleClose = (value) => {
   setOpen(false);
   setSelectedValue(value);
 };
 
-const handleClose2 = (value) => {
-  setOpen2(false);
-  setSelectedValue(value);
-};
-
-  
 
   const [alignment, setAlignment] = React.useState('MM1');
-  const [seed, setSeed] = React.useState('');
-  const [size, setSize] = React.useState('');
-  const [inc, setInc] = React.useState('');
-  const [mult, setMult] = React.useState('');
-  const [mod, setMod] = React.useState('');
+  const [lambda, setLambda] = React.useState('');
+  const [mu, setMu] = React.useState('');
+  const [cw, setCw] = React.useState('');
+  const [cs, setCs] = React.useState('');
+  const [S, setS] = React.useState('');
+  const [K, setK] = React.useState('');
  
   
 
@@ -88,22 +83,28 @@ const handleClose2 = (value) => {
     setAlignment(newAlignment);
   };
 
-  const handleSeedChange = (event) => {
-    setSeed(parseInt(event.target.value));
+  const handleLambdaChange = (event) => {
+    setLambda(parseInt(event.target.value));
   };
 
-  const handleSizeChange = (event) => {
-    setSize(parseInt(event.target.value));
-  };
-  const handleIncChange = (event) => {
-    setInc(parseInt(event.target.value));
+  const handleMuChange = (event) => {
+    setMu(parseInt(event.target.value));
   };
 
-  const handleMultChange = (event) => {
-    setMult(parseInt(event.target.value));
+  const handleCwChange = (event) => {
+    setCw(parseInt(event.target.value));
   };
-  const handleModChange = (event) => {
-    setMod(parseInt(event.target.value));
+
+  const handleCsChange = (event) => {
+    setCs(parseInt(event.target.value));
+  };
+
+  const handleSChange = (event) => {
+    setS(parseInt(event.target.value));
+  };
+
+  const handleKChange = (event) => {
+    setK(parseInt(event.target.value));
   };
 
 
@@ -120,15 +121,8 @@ const handleClose2 = (value) => {
   
     return (
       <Dialog onClose={handleClose} open={open}>
-        <table>
-        <tr>
-      <th>Numero Aleatorio</th>
-      <th>Ri</th>
-    </tr>
-          {values.map((name, i) => <tr><td>{name}</td><td>{valuesDecimal[i]}</td></tr>)}
-        {/* {values.map(name => <h1>{name}</h1>)}
-        {valuesDecimal.map(name => <h1>{name}</h1>)} */}
-        </table>
+       <h1>Resultados</h1>
+       <p>{values}</p>
       </Dialog>
     );
   }
@@ -139,72 +133,7 @@ const handleClose2 = (value) => {
     selectedValue: PropTypes.string.isRequired,
   };
   
-  
-  function SimpleDialogPlus(props) {
-    const { onClose, selectedValue, open } = props;
-  
-    const handleClose = () => {
-      onClose(selectedValue);
-      values = []
-      valuesDecimal = []
-    };
-  
-    return (
-      <Dialog onClose={handleClose} open={open}>
-        <table>
-        <tr>
-      <th>Numero Aleatorio</th>
-      <th>Ri</th>
-    </tr>
-          {values.map((name, i) => <tr><td>{name}</td><td>{valuesDecimal[i]}</td></tr>)}
-        {/* {values.map(name => <h1>{name}</h1>)}
-        {valuesDecimal.map(name => <h1>{name}</h1>)} */}
-        </table>
-  
-        <Stack spacing={2} direction="row">
-        <Button variant="contained">Chi-Cuadrada</Button>
-        <Button  onClick={() => {
-    handleClickOpen2();
-  }} variant="contained">Kolmogorov-Smirnov</Button>
-      </Stack>
 
-      <SimpleDialogSmirnov
-        selectedValue={selectedValue}
-        open={open2}
-        onClose={handleClose2}
-      />
-      
-      </Dialog>
-    );
-  }
-  
-  SimpleDialogPlus.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.string.isRequired,
-  };
-  
-  function SimpleDialogSmirnov(props) {
-    const { onClose, selectedValue, open } = props;
-  
-    const handleClose2 = () => {
-      onClose(selectedValue);
-    };
-  
-    return (
-      <Dialog onClose={handleClose2} open={open2}>
-        <DialogTitle>Prueba Kolmogorov-Smirnov</DialogTitle>
-        <h1>{testResult}</h1>
-      </Dialog>
-    );
-  }
-  
-  SimpleDialogSmirnov.propTypes = {
-    onClose: PropTypes.func.isRequired,
-    open: PropTypes.bool.isRequired,
-    selectedValue: PropTypes.string.isRequired,
-  };
-    
 
   switch (alignment) {
     case 'MM1':
@@ -234,10 +163,10 @@ const handleClose2 = (value) => {
   >
  
     
-    <TextField id="outlined-basic" label="Lambda"  onChange={handleSeedChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Mu" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cw" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cs" onChange={handleSizeChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Lambda"  onChange={handleLambdaChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Mu" onChange={handleMuChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cw" onChange={handleCwChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cs" onChange={handleCsChange} variant="outlined" />
     </Box>
 
     <Button  onClick={() => {
@@ -249,12 +178,10 @@ const handleClose2 = (value) => {
         open={open}
         onClose={handleClose}
       />
-
- 
-     
-     
   </div>);
-      break;
+
+
+      
     case 'MMS':
     return(<div className="App">
 
@@ -281,11 +208,11 @@ const handleClose2 = (value) => {
     autoComplete="off"
   >
     
-    <TextField id="outlined-basic" label="Lambda"  onChange={handleSeedChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Mu" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="s" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cw" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cs" onChange={handleSizeChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Lambda"  onChange={handleLambdaChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Mu" onChange={handleMuChange} variant="outlined" />
+    <TextField id="outlined-basic" label="s" onChange={handleSChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cw" onChange={handleCwChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cs" onChange={handleCsChange} variant="outlined" />
     
     </Box>
 
@@ -294,7 +221,7 @@ const handleClose2 = (value) => {
     handleClickOpen();
   }} variant="contained">Generar</Button>
 
-<SimpleDialogPlus
+<SimpleDialog
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
@@ -305,7 +232,8 @@ const handleClose2 = (value) => {
      
      
   </div>);
-      break;
+
+
     case 'MMSK':
     return(<div className="App">
 
@@ -332,11 +260,11 @@ const handleClose2 = (value) => {
     autoComplete="off"
   >
     
-    <TextField id="outlined-basic" label="Lambda"  onChange={handleSeedChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Mu" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="s" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="K" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cs" onChange={handleSizeChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Lambda"  onChange={handleLambdaChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Mu" onChange={handleMuChange} variant="outlined" />
+    <TextField id="outlined-basic" label="s" onChange={handleSChange} variant="outlined" />
+    <TextField id="outlined-basic" label="K" onChange={handleKChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cs" onChange={handleCsChange} variant="outlined" />
     </Box>
 
 
@@ -344,7 +272,7 @@ const handleClose2 = (value) => {
     handleClickOpen();
   }} variant="contained">Generar</Button>
 
-<SimpleDialogPlus
+<SimpleDialog
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
@@ -352,7 +280,8 @@ const handleClose2 = (value) => {
      
      
   </div>);
-      break;
+
+
     case 'MG1':
     return(<div className="App">
 
@@ -379,9 +308,9 @@ const handleClose2 = (value) => {
     autoComplete="off"
   >
     
-    <TextField id="outlined-basic" label="Lambda"  onChange={handleSeedChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Mu" onChange={handleSizeChange} variant="outlined" />
-    <TextField id="outlined-basic" label="Cs" onChange={handleSizeChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Lambda"  onChange={handleLambdaChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Mu" onChange={handleMuChange} variant="outlined" />
+    <TextField id="outlined-basic" label="Cs" onChange={handleCsChange} variant="outlined" />
     </Box>
 
 
@@ -389,14 +318,14 @@ const handleClose2 = (value) => {
     handleClickOpen();
   }} variant="contained">Generar</Button>
 
-<SimpleDialogPlus
+ <SimpleDialog
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
       />
      
   </div>);
-      break;
+      
 
   }
 
