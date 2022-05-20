@@ -115,14 +115,16 @@ const handleClose = (value) => {
   
     const handleClose = () => {
       onClose(selectedValue);
-      values = []
-      valuesDecimal = []
+      Lq = null
     };
   
     return (
       <Dialog onClose={handleClose} open={open}>
        <h1>Resultados</h1>
-       <p>{values}</p>
+       <h2>Lq = {Lq}</h2>
+       <h2>L = {L}</h2>
+       <h2>Wq = {Wq}</h2>
+       <h2>W = {W}</h2>
       </Dialog>
     );
   }
@@ -132,6 +134,18 @@ const handleClose = (value) => {
     open: PropTypes.bool.isRequired,
     selectedValue: PropTypes.string.isRequired,
   };
+
+
+  function mm1Calculate(){
+
+    Lq =  Math.pow(lambda,2)/(mu*(mu-lambda))
+    L = lambda/(mu-lambda)
+    Wq = lambda/(mu*(mu-lambda))
+    W = 1/(mu-lambda)
+    
+
+
+  }
   
 
 
@@ -170,6 +184,7 @@ const handleClose = (value) => {
     </Box>
 
     <Button  onClick={() => {
+      mm1Calculate();
     handleClickOpen();
   }} variant="contained">Generar</Button>
 
