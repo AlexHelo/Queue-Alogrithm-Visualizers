@@ -23,6 +23,7 @@ var L
 var Lq
 var W 
 var Wq
+var S
 
 
 
@@ -107,7 +108,7 @@ const handleClose = (value) => {
     setK(parseInt(event.target.value));
   };
 
-
+//Hasta aquí todo bien
 
 
   function SimpleDialog(props) {
@@ -135,7 +136,7 @@ const handleClose = (value) => {
     selectedValue: PropTypes.string.isRequired,
   };
 
-
+// Método MM1
   function mm1Calculate(){
 
     Lq =  Math.pow(lambda,2)/(mu*(mu-lambda))
@@ -146,7 +147,50 @@ const handleClose = (value) => {
 
 
   }
+
+  // Factorial
+  /*
+  function factorial(S) {
+    let s = 1;
+    while (S > 1) {
+        s *= S;
+        S--;
+    }
+    return s;
+}
+*/
   
+  // Metodo MMS
+  function mmsCalculate(){
+    var numero = S;
+    var factorials = 1;
+
+    for(var i=1; i<=numero; i++) {
+      factorials *= i;
+}
+  //console.log(dato);
+    //var n = 0;
+    // Sumatoria
+    var ss = S - 1;
+    var i=0;
+    var numero=0;
+    var misuma=0;
+    while(i<ss){
+      if(numero%2==0){
+        misuma=misuma+numero;
+        i=i+1;
+      }
+      return numero=numero+1;
+    } 
+    // var Poa = ((Math.pow(lambda/mu, S))/factorials)
+    var Pob = ((Math.pow(lambda/mu, S))/factorials)*(1/(1-(lambda/(S*mu))));
+    var Po = 1/(((Math.pow(lambda/mu),S)/mu) + Pob)
+    var Ro = lambda/(mu*S)
+    Lq = Po*(Math.pow(lambda,S))*Ro/(S*(Math.pow(1 - Ro), 2))
+    L = Lq + (lambda/mu)
+    Wq = Lq/lambda
+    W = Pob; //Wq + (1/mu)
+  }
 
 
   switch (alignment) {
@@ -233,6 +277,7 @@ const handleClose = (value) => {
 
     
     <Button  onClick={() => {
+      mmsCalculate();
     handleClickOpen();
   }} variant="contained">Generar</Button>
 
@@ -241,10 +286,6 @@ const handleClose = (value) => {
         open={open}
         onClose={handleClose}
       />
-
-
-    
-     
      
   </div>);
 
