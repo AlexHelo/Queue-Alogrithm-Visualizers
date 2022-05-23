@@ -21,6 +21,9 @@ var Wq;
 var prob;
 var costo;
 var Rho;
+var isMek = false;
+var te;
+var Pk;
 
 export default function App() {
   const [inputList, setInputList] = React.useState([
@@ -85,11 +88,11 @@ export default function App() {
   };
 
   const handleCwChange = (event) => {
-    setCw(parseInt(event.target.value));
+    setCw(parseFloat(event.target.value));
   };
 
   const handleCsChange = (event) => {
-    setCs(parseInt(event.target.value));
+    setCs(parseFloat(event.target.value));
   };
 
   const handleSChange = (event) => {
@@ -115,19 +118,49 @@ export default function App() {
     const handleClose = () => {
       onClose(selectedValue);
       Lq = null;
-    };
+      L = null;
+      Wq = null;
+      W = null;
+      te = null;
+      isMek = false;
+      prob = null;
+      costo = null;
 
+    };
+    if(isMek){
     return (
+
       <Dialog onClose={handleClose} open={open}>
         <h1>Resultados</h1>
         <h2>Lq = {Lq}</h2>
         <h2>L = {L}</h2>
-        <h2>Wq = {Wq}</h2>
-        <h2>W = {W}</h2>
+        <h2>Wq = {Wq} horas</h2>
+        <h2>W = {W} horas</h2>
         <h2>Pn = {prob}</h2>
-        <h2>Costo = {costo}</h2>
+        <h2>Costo = {costo} usd</h2>
+        <h2>Tasa Efectiva = {te} clientes por hora</h2>
+        <h2>Rho = {Rho}</h2>
+        <h2>Pk = {Pk}</h2>
+
+        
       </Dialog>
     );
+    }else{
+      return (
+
+        <Dialog onClose={handleClose} open={open}>
+          <h1>Resultados</h1>
+          <h2>Lq = {Lq}</h2>
+          <h2>L = {L}</h2>
+          <h2>Wq = {Wq} horas</h2>
+          <h2>W = {W} horas</h2>
+          <h2>Pn = {prob}</h2>
+          <h2>Costo = {costo} usd</h2>
+          
+        </Dialog>
+      );
+
+    }
   }
 
   SimpleDialog.propTypes = {
@@ -193,12 +226,13 @@ export default function App() {
 
   //mmsk
   function mmskCalculate() {
+    isMek = true;
     var fPar = 0;
     var lPar = 0;
     var sPar = 0;
     var P0 = 0;
     var PK = 0;
-    console.log(K);
+  
     Rho = lambda / (mu * S);
     var lmu = lambda / mu;
     for (let n = S + 1; n <= K; n++) {
@@ -213,7 +247,7 @@ export default function App() {
     
     
     P0 = 1 / (lPar + sPar * fPar);
-    console.log(P0);
+    
 
     if(Pn > K){
       prob = 0;
@@ -232,8 +266,11 @@ export default function App() {
     Lq = ((P0 * Math.pow(lmu, S) * Rho) / (factorialRecursivo(S) * Math.pow(1 - Rho, 2))) 
       * (1- Math.pow(Rho, K-S) -(K - S)* (Math.pow(Rho, K-S))*(1 - Rho));
 
-    PK = Math.pow(lmu, K) /(factorialRecursivo(S) * Math.pow(S, K-S))* P0;
+    PK = Math.pow(lmu, K) /(factorialRecursivo(S) * Math.pow(S, K-S));
+    Pk = PK;
+    console.log(PK);
     var tasaEfectiva = lambda * (1- PK);
+    te = tasaEfectiva;
     //Wq
     Wq = Lq / tasaEfectiva;
     //W
