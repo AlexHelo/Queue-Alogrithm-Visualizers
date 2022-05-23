@@ -19,6 +19,7 @@ var Lq;
 var W;
 var Wq;
 var prob;
+var costo;
 var Rho;
 
 export default function App() {
@@ -124,6 +125,7 @@ export default function App() {
         <h2>Wq = {Wq}</h2>
         <h2>W = {W}</h2>
         <h2>Pn = {prob}</h2>
+        <h2>Costo = {costo}</h2>
       </Dialog>
     );
   }
@@ -133,6 +135,8 @@ export default function App() {
     open: PropTypes.bool.isRequired,
     selectedValue: PropTypes.string.isRequired,
   };
+
+
   //FACTORIAL
   function factorialRecursivo (n) { 
     if (n == 0){ 
@@ -149,6 +153,7 @@ export default function App() {
     Wq = lambda / (mu * (mu - lambda));
     W = 1 / (mu - lambda);
     prob = (1- Rho) * (Math.pow(Rho, Pn));
+    costo = (Lq * cw) + cs;
   }
   //mms
   function mmsCalculate() {
@@ -179,6 +184,8 @@ export default function App() {
     }else{
       prob = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
     }
+
+    costo = (Lq * cw) + (S *cs);
 
     
 
@@ -233,6 +240,8 @@ export default function App() {
     W = Wq + 1 / mu;
     //L
     L = tasaEfectiva * W;
+
+    costo = (Lq * cw) + (S *cs);
   }
 
 
@@ -249,6 +258,8 @@ export default function App() {
     W = Wq + (1/ mu);
 
     prob = Math.pow(Rho, Pn) * P0;
+
+    costo = (Lq * cw) + (cs);
          
   }
   //MEK1
@@ -261,6 +272,7 @@ export default function App() {
     W = Wq + (1/ mu);
     L = lambda * W;
     prob = Math.pow(Rho, Pn) * P0;
+    costo = (Lq * cw) + (cs);
   
   
 
@@ -276,6 +288,7 @@ export default function App() {
     W = Wq + (1/ mu);
     console.log(P0);
     prob = Math.pow(Rho, Pn) * P0;
+    costo = (Lq * cw) + (cs);
 
   }
 
@@ -502,6 +515,12 @@ export default function App() {
             />
             <TextField
               id="outlined-basic"
+              label="Cw"
+              onChange={handleCwChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
               label="Cs"
               onChange={handleCsChange}
               variant="outlined"
@@ -575,6 +594,12 @@ export default function App() {
               id="outlined-basic"
               label="Pn"
               onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Cw"
+              onChange={handleCwChange}
               variant="outlined"
             />
             <TextField
@@ -655,6 +680,12 @@ export default function App() {
             />
             <TextField
               id="outlined-basic"
+              label="Cw"
+              onChange={handleCwChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
               label="Cs"
               onChange={handleCsChange}
               variant="outlined"
@@ -721,6 +752,12 @@ export default function App() {
               id="outlined-basic"
               label="Pn"
               onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Cw"
+              onChange={handleCwChange}
               variant="outlined"
             />
             <TextField
