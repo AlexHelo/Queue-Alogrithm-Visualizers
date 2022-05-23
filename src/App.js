@@ -67,6 +67,7 @@ export default function App() {
   const [S, setS] = React.useState("");
   const [K, setK] = React.useState("");
   const [Pn, setPn] = React.useState("");
+  const [desviacionE, setDe] = React.useState("");
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -98,6 +99,9 @@ export default function App() {
   const handlePnChange = (event) => {
     setPn(parseInt(event.target.value));
   };
+  const handleDeChange = (event) => {
+    setDe(parseFloat(event.target.value));
+  };
 
   function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -124,13 +128,13 @@ export default function App() {
     selectedValue: PropTypes.string.isRequired,
   };
   //FACTORIAL
-  function rFact(n) {
-    if (n === 0) {
-      return 1;
-    } else {
-      return n * rFact(n - 1);
+  function factorialRecursivo (n) { 
+    if (n == 0){ 
+      return 1; 
     }
+    return n * factorialRecursivo (n-1); 
   }
+
   //MM1
   function mm1Calculate() {
     Lq = Math.pow(lambda, 2) / (mu * (mu - lambda));
@@ -147,26 +151,26 @@ export default function App() {
     var Pr = 0;
     var lmu = lambda / mu;
     for (let n = 0; n <= S - 1; n++) {
-      lPar += Math.pow(lmu , n) / rFact(n);
+      lPar += Math.pow(lmu , n) / factorialRecursivo(n);
       
     }
 
-    sPar = Math.pow(lmu, S) / rFact(S) * (1/(1- Rho));
+    sPar = Math.pow(lmu, S) / factorialRecursivo(S) * (1/(1- Rho));
     P0 = 1/(lPar + sPar);
 
 
-    Lq = (P0 * (Math.pow(lmu, S) * Rho)) / ((rFact(S)) * (Math.pow(1 -Rho, 2)));
+    Lq = (P0 * (Math.pow(lmu, S) * Rho)) / ((factorialRecursivo(S)) * (Math.pow(1 -Rho, 2)));
     L = Lq + (lmu);
     Wq = Lq/ lambda;
     W = Wq + 1/ mu;
 
     //Pn
     if(Pn <= S){
-      Pr = Math.pow(lmu, Pn) / rFact(Pn) * P0;
+      Pr = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
       
 
     }else{
-      Pr = Math.pow(lmu, Pn) /(rFact(S) * Math.pow(S, Pn-S))* P0;
+      Pr = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
     }
 
     
@@ -181,17 +185,18 @@ export default function App() {
     var P0 = 0;
     var PK = 0;
     var Pr = 0;
+    console.log(K);
     Rho = lambda / (mu * S);
     var lmu = lambda / mu;
     for (let n = S + 1; n <= K; n++) {
       fPar += Math.pow(Rho, n - S);
     }
     for (let p = 0; p <= S; p++) {
-      lPar += Math.pow(lmu , p) / rFact(p);
+      lPar += Math.pow(lmu , p) / factorialRecursivo(p);
       
     }
 
-    sPar = Math.pow(lmu, S) / rFact(S);
+    sPar = Math.pow(lmu, S) / factorialRecursivo(S);
     
     
     P0 = 1 / (lPar + sPar * fPar);
@@ -202,19 +207,19 @@ export default function App() {
 
     }else{
       if(Pn <= S){
-        Pr = Math.pow(lmu, Pn) / rFact(Pn) * P0;
+        Pr = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
         
 
       }else{
-        Pr = Math.pow(lmu, Pn) /(rFact(S) * Math.pow(S, Pn-S))* P0;
+        Pr = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
       }
     }
     console.log(Pr);
     //Lq
-    Lq = ((P0 * Math.pow(lmu, S) * Rho) / (rFact(S) * Math.pow(1 - Rho, 2))) 
+    Lq = ((P0 * Math.pow(lmu, S) * Rho) / (factorialRecursivo(S) * Math.pow(1 - Rho, 2))) 
       * (1- Math.pow(Rho, K-S) -(K - S)* (Math.pow(Rho, K-S))*(1 - Rho));
 
-    PK = Math.pow(lmu, K) /(rFact(S) * Math.pow(S, K-S))* P0;
+    PK = Math.pow(lmu, K) /(factorialRecursivo(S) * Math.pow(S, K-S))* P0;
     var tasaEfectiva = lambda * (1- PK);
     //Wq
     Wq = Lq / tasaEfectiva;
@@ -222,9 +227,25 @@ export default function App() {
     W = Wq + 1 / mu;
     //L
     L = tasaEfectiva * W;
-
-
   }
+
+
+  //MG1
+  function mg1Calculate() {
+    var P0 = 0;
+    Rho = lambda / mu;
+    
+    P0 = 1 - Rho;
+    console.log(desviacionE);
+    Lq = (((Math.pow(lambda, 2)) * (Math.pow(desviacionE, 2))) + (Math.pow(Rho, 2))) / (2 * (1 - Rho));
+    L = Rho + Lq;
+    Wq = (Math.pow(lambda, 2) * Math.pow(desviacionE, 2) + Math.pow(Rho, 2)) / (2 * lambda* (1- Rho));
+    W = Wq + (1/ mu);
+         
+  }
+
+
+  
 
   switch (alignment) {
     case "MM1":
@@ -497,6 +518,12 @@ export default function App() {
             />
             <TextField
               id="outlined-basic"
+              label="Desviacion Estandar"
+              onChange={handleDeChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
               label="Cs"
               onChange={handleCsChange}
               variant="outlined"
@@ -505,6 +532,7 @@ export default function App() {
 
           <Button
             onClick={() => {
+              mg1Calculate();
               handleClickOpen();
             }}
             variant="contained"
