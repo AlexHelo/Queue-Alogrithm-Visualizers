@@ -18,6 +18,7 @@ var L;
 var Lq;
 var W;
 var Wq;
+var prob;
 var Rho;
 
 export default function App() {
@@ -68,6 +69,7 @@ export default function App() {
   const [K, setK] = React.useState("");
   const [Pn, setPn] = React.useState("");
   const [desviacionE, setDe] = React.useState("");
+  const [erlangK, setEk] = React.useState("");
 
   const handleChange = (event, newAlignment) => {
     setAlignment(newAlignment);
@@ -102,6 +104,9 @@ export default function App() {
   const handleDeChange = (event) => {
     setDe(parseFloat(event.target.value));
   };
+  const handleEkChange = (event) => {
+    setEk(parseInt(event.target.value));
+  };
 
   function SimpleDialog(props) {
     const { onClose, selectedValue, open } = props;
@@ -118,6 +123,7 @@ export default function App() {
         <h2>L = {L}</h2>
         <h2>Wq = {Wq}</h2>
         <h2>W = {W}</h2>
+        <h2>Pn = {prob}</h2>
       </Dialog>
     );
   }
@@ -137,10 +143,12 @@ export default function App() {
 
   //MM1
   function mm1Calculate() {
+    Rho = lambda / mu;
     Lq = Math.pow(lambda, 2) / (mu * (mu - lambda));
     L = lambda / (mu - lambda);
     Wq = lambda / (mu * (mu - lambda));
     W = 1 / (mu - lambda);
+    prob = (1- Rho) * (Math.pow(Rho, Pn));
   }
   //mms
   function mmsCalculate() {
@@ -148,7 +156,6 @@ export default function App() {
     var lPar = 0;
     var sPar = 0;
     var P0 = 0;
-    var Pr = 0;
     var lmu = lambda / mu;
     for (let n = 0; n <= S - 1; n++) {
       lPar += Math.pow(lmu , n) / factorialRecursivo(n);
@@ -166,11 +173,11 @@ export default function App() {
 
     //Pn
     if(Pn <= S){
-      Pr = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
+      prob = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
       
 
     }else{
-      Pr = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
+      prob = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
     }
 
     
@@ -184,7 +191,6 @@ export default function App() {
     var sPar = 0;
     var P0 = 0;
     var PK = 0;
-    var Pr = 0;
     console.log(K);
     Rho = lambda / (mu * S);
     var lmu = lambda / mu;
@@ -203,18 +209,18 @@ export default function App() {
     console.log(P0);
 
     if(Pn > K){
-      Pr = 0;
+      prob = 0;
 
     }else{
       if(Pn <= S){
-        Pr = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
+        prob = Math.pow(lmu, Pn) / factorialRecursivo(Pn) * P0;
         
 
       }else{
-        Pr = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
+        prob = Math.pow(lmu, Pn) /(factorialRecursivo(S) * Math.pow(S, Pn-S))* P0;
       }
     }
-    console.log(Pr);
+  
     //Lq
     Lq = ((P0 * Math.pow(lmu, S) * Rho) / (factorialRecursivo(S) * Math.pow(1 - Rho, 2))) 
       * (1- Math.pow(Rho, K-S) -(K - S)* (Math.pow(Rho, K-S))*(1 - Rho));
@@ -236,12 +242,41 @@ export default function App() {
     Rho = lambda / mu;
     
     P0 = 1 - Rho;
-    console.log(desviacionE);
+    //console.log(desviacionE);
     Lq = (((Math.pow(lambda, 2)) * (Math.pow(desviacionE, 2))) + (Math.pow(Rho, 2))) / (2 * (1 - Rho));
     L = Rho + Lq;
     Wq = (Math.pow(lambda, 2) * Math.pow(desviacionE, 2) + Math.pow(Rho, 2)) / (2 * lambda* (1- Rho));
     W = Wq + (1/ mu);
+
+    prob = Math.pow(Rho, Pn) * P0;
          
+  }
+  //MEK1
+  function mek1Calculate() {
+    var P0 = 0;
+    Rho = lambda / mu;
+    P0 = 1 - Rho;
+    Lq = ((1 + erlangK) / (2 * erlangK)) * ((Math.pow(lambda, 2)) / ((mu) * (mu - lambda)));
+    Wq = ((1 + erlangK) / (2 * erlangK)) * ((lambda)/ ((mu) *(mu - lambda)));
+    W = Wq + (1/ mu);
+    L = lambda * W;
+    prob = Math.pow(Rho, Pn) * P0;
+  
+  
+
+  }
+  //MD1
+  function md1Calculate() {
+    var P0 = 0;
+    Rho = lambda / mu;
+    P0 = 1 - Rho;
+    Lq = (Math.pow(Rho, 2)) / ((2 * (1 - Rho)));
+    L =  Rho + Lq;
+    Wq = (Math.pow(Rho, 2)) / ((2 * lambda * (1 - Rho)));
+    W = Wq + (1/ mu);
+    console.log(P0);
+    prob = Math.pow(Rho, Pn) * P0;
+
   }
 
 
@@ -261,6 +296,8 @@ export default function App() {
             <ToggleButton value="MMS">M/M/s</ToggleButton>
             <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
             <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
           </ToggleButtonGroup>
 
           <h1>Metodo M/M/1</h1>
@@ -283,6 +320,12 @@ export default function App() {
               id="outlined-basic"
               label="Mu"
               onChange={handleMuChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Pn"
+              onChange={handlePnChange}
               variant="outlined"
             />
             <TextField
@@ -330,6 +373,8 @@ export default function App() {
             <ToggleButton value="MMS">M/M/s</ToggleButton>
             <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
             <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
           </ToggleButtonGroup>
 
           <h1>Metodo M/M/s</h1>
@@ -362,6 +407,12 @@ export default function App() {
             />
             <TextField
               id="outlined-basic"
+              label="Pn"
+              onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
               label="Cw"
               onChange={handleCwChange}
               variant="outlined"
@@ -370,12 +421,6 @@ export default function App() {
               id="outlined-basic"
               label="Cs"
               onChange={handleCsChange}
-              variant="outlined"
-            />
-            <TextField
-              id="outlined-basic"
-              label="Pn"
-              onChange={handlePnChange}
               variant="outlined"
             />
           </Box>
@@ -411,6 +456,8 @@ export default function App() {
             <ToggleButton value="MMS">M/M/s</ToggleButton>
             <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
             <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
           </ToggleButtonGroup>
 
           <h1>Metodo M/M/s/K</h1>
@@ -492,6 +539,8 @@ export default function App() {
             <ToggleButton value="MMS">M/M/s</ToggleButton>
             <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
             <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
           </ToggleButtonGroup>
 
           <h1>Generador M/G/1</h1>
@@ -524,6 +573,12 @@ export default function App() {
             />
             <TextField
               id="outlined-basic"
+              label="Pn"
+              onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
               label="Cs"
               onChange={handleCsChange}
               variant="outlined"
@@ -533,6 +588,152 @@ export default function App() {
           <Button
             onClick={() => {
               mg1Calculate();
+              handleClickOpen();
+            }}
+            variant="contained"
+          >
+            Generar
+          </Button>
+
+          <SimpleDialog
+            selectedValue={selectedValue}
+            open={open}
+            onClose={handleClose}
+          />
+        </div>
+      );
+      case "MEk1":
+      return (
+        <div className="App">
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+          >
+            <ToggleButton value="MM1">M/M/1</ToggleButton>
+            <ToggleButton value="MMS">M/M/s</ToggleButton>
+            <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
+            <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
+          </ToggleButtonGroup>
+
+          <h1>Generador M/Ek/1</h1>
+
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "25ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="outlined-basic"
+              label="Lambda"
+              onChange={handleLambdaChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Mu"
+              onChange={handleMuChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Erlang K"
+              onChange={handleEkChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Pn"
+              onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Cs"
+              onChange={handleCsChange}
+              variant="outlined"
+            />
+          </Box>
+
+          <Button
+            onClick={() => {
+              mek1Calculate();
+              handleClickOpen();
+            }}
+            variant="contained"
+          >
+            Generar
+          </Button>
+
+          <SimpleDialog
+            selectedValue={selectedValue}
+            open={open}
+            onClose={handleClose}
+          />
+        </div>
+      );
+      case "MD1":
+      return (
+        <div className="App">
+          <ToggleButtonGroup
+            color="primary"
+            value={alignment}
+            exclusive
+            onChange={handleChange}
+          >
+            <ToggleButton value="MM1">M/M/1</ToggleButton>
+            <ToggleButton value="MMS">M/M/s</ToggleButton>
+            <ToggleButton value="MMSK">M/M/s/K</ToggleButton>
+            <ToggleButton value="MG1">M/G/1</ToggleButton>
+            <ToggleButton value="MEk1">M/Ek/1</ToggleButton>
+            <ToggleButton value="MD1">M/D/1</ToggleButton>
+          </ToggleButtonGroup>
+
+          <h1>Generador M/D/1</h1>
+
+          <Box
+            component="form"
+            sx={{
+              "& > :not(style)": { m: 1, width: "25ch" },
+            }}
+            noValidate
+            autoComplete="off"
+          >
+            <TextField
+              id="outlined-basic"
+              label="Lambda"
+              onChange={handleLambdaChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Mu"
+              onChange={handleMuChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Pn"
+              onChange={handlePnChange}
+              variant="outlined"
+            />
+            <TextField
+              id="outlined-basic"
+              label="Cs"
+              onChange={handleCsChange}
+              variant="outlined"
+            />
+          </Box>
+
+          <Button
+            onClick={() => {
+              md1Calculate();
               handleClickOpen();
             }}
             variant="contained"
