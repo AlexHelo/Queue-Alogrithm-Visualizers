@@ -80,11 +80,11 @@ export default function App() {
   };
 
   const handleLambdaChange = (event) => {
-    setLambda(parseInt(event.target.value));
+    setLambda(parseFloat(event.target.value));
   };
 
   const handleMuChange = (event) => {
-    setMu(parseInt(event.target.value));
+    setMu(parseFloat(event.target.value));
   };
 
   const handleCwChange = (event) => {
@@ -96,20 +96,20 @@ export default function App() {
   };
 
   const handleSChange = (event) => {
-    setS(parseInt(event.target.value));
+    setS(parseFloat(event.target.value));
   };
 
   const handleKChange = (event) => {
-    setK(parseInt(event.target.value));
+    setK(parseFloat(event.target.value));
   };
   const handlePnChange = (event) => {
-    setPn(parseInt(event.target.value));
+    setPn(parseFloat(event.target.value));
   };
   const handleDeChange = (event) => {
     setDe(parseFloat(event.target.value));
   };
   const handleEkChange = (event) => {
-    setEk(parseInt(event.target.value));
+    setEk(parseFloat(event.target.value));
   };
 
   function SimpleDialog(props) {
@@ -187,6 +187,7 @@ export default function App() {
     W = 1 / (mu - lambda);
     prob = (1- Rho) * (Math.pow(Rho, Pn));
     costo = (Lq * cw) + cs;
+    
   }
   //mms
   function mmsCalculate() {
@@ -365,6 +366,7 @@ export default function App() {
               label="Lambda"
               onChange={handleLambdaChange}
               variant="outlined"
+          
             />
             <TextField
               id="outlined-basic"
